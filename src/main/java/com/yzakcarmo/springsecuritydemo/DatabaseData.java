@@ -16,7 +16,7 @@ public class DatabaseData implements CommandLineRunner {
     private UserRepository userRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args){
 
         User u1 = new User(null, "Teste", "teste@teste.com", 1122222222, "123", UserRole.DEFAULT);
         User u2 = new User(null,"Teste ADM", "testeadm@teste.com", 1122222222, "123", UserRole.ADMIN);
