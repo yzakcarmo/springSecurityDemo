@@ -2,7 +2,9 @@ package com.yzakcarmo.springsecuritydemo.resources;
 
 import com.yzakcarmo.springsecuritydemo.entities.User;
 import com.yzakcarmo.springsecuritydemo.entities.records.AuthenticationDTO;
+import com.yzakcarmo.springsecuritydemo.entities.records.LoginResponseDTO;
 import com.yzakcarmo.springsecuritydemo.entities.records.RegisterDTO;
+import com.yzakcarmo.springsecuritydemo.infra.security.TokenService;
 import com.yzakcarmo.springsecuritydemo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +25,16 @@ public class AuthenticationResource {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Validated AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
+        var token = tokenService.generateToken((User) auth.getPrincipal());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
